@@ -9,6 +9,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class DriverRunner
 {
+    public const DEFAULT_TIMEOUT = 30;
+
     private Process | null $process = null;
 
     public function __construct(private LoggerInterface $logger, private string $driverPath, private int $driverPort = 4444, private array $driverOptions = [])
@@ -20,6 +22,8 @@ class DriverRunner
      */
     public function run(): Process
     {
+        $this->logger->info(\sprintf('Starting Chrome-driver at %s', \date_create()->format(\DateTimeInterface::ATOM)));
+
         $options = \array_merge([\sprintf('--port=%s', $this->driverPort)], $this->driverOptions);
         $this->process = new Process([$this->driverPath, ...$options]);
 
@@ -32,8 +36,10 @@ class DriverRunner
                 $this->logger->info($buffer);
             }
         });
-        $this->waitUntilReady($this->process);
+        $timeout = ($this->driverOptions['timeout'] ?? null) ?? self::DEFAULT_TIMEOUT;
+        $this->waitUntilReady($this->process, (int) $timeout);
 
+        $this->logger->info(\sprintf('Chrome-driver started at %s', \date_create()->format(\DateTimeInterface::ATOM)));
         return $this->process;
     }
 
