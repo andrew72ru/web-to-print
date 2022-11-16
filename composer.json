@@ -1,0 +1,46 @@
+{
+    "name": "andrew72ru/web2print",
+    "description": "The package for generate PDF pages from HTML",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrew Zhdanovskikh",
+            "email": "andrew72ru@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.0",
+        "ext-ctype": "*",
+        "ext-iconv": "*",
+        "php-webdriver/webdriver": "^1.13",
+        "symfony/http-client": "^6.1",
+        "symfony/mime": "^6.1",
+        "symfony/process": "^6.1",
+        "psr/log": "^3.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Andrew72ru\\Web2print\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Andrew72ru\\Web2print\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.13",
+        "phpunit/phpunit": "^9.5",
+        "vimeo/psalm": "^4.30"
+    }
+}
