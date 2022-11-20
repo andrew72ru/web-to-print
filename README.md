@@ -20,10 +20,35 @@ After that, you can call the `PrintToPdf` class:
 ```php
 $printer = new \Andrew72ru\Web2print\PrintToPdf($runner, $logger);
 $result = $printer('https://google.com', asBas64: true); // You can get Base64 or binary string
-\file_put_contents('google.pdf', $result);
+\file_put_contents('google.pdf', \base64_decode($result));
 ```
 
 As a result, you will have a 'google.pdf' file in your working directory.
+
+## Default options
+
+The `PrintToPdf` class has a set of default options to run the Chrome and the print command.
+
+### Chrome options
+
+```php
+$defaultArguments = ['--headless', '--run-all-compositor-stages-before-draw'];
+```
+
+### Print options
+
+```php
+$defaultParams = [
+    'displayHeaderFooter' => false,
+    'printBackground' => true,
+    'marginTop' => 0,
+    'marginBottom' => 0,
+    'marginLeft' => 0,
+    'marginRight' => 0,
+];
+```
+
+See references in [Chrome manual](https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF).
 
 ## Testing
 
