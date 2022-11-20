@@ -1,6 +1,6 @@
 {
     "name": "andrew72ru/web2print",
-    "description": "The package for generate PDF pages from HTML",
+    "description": "The package for generating PDF pages from HTML with headless Chrome and Chrome-driver",
     "type": "library",
     "license": "MIT",
     "authors": [
