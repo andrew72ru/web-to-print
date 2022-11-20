@@ -19,7 +19,7 @@
         "symfony/http-client": "^5.4",
         "symfony/mime": "^5.4",
         "symfony/process": "^5.4",
-        "psr/log": "^3.0"
+        "psr/log": "^2.0"
     },
     "config": {
         "optimize-autoloader": true,
