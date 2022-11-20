@@ -29,7 +29,7 @@ class DriverRunnerTest extends TestCase
         $runner = new DriverRunner($logger, 'no-such-file');
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessageMatches('/Command not found/');
+        $this->expectExceptionMessageMatches('/Unable to start Chromedriver/');
         $runner->run();
     }
 

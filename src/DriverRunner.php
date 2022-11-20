@@ -2,12 +2,13 @@
 
 namespace Andrew72ru\Web2print;
 
+use Andrew72ru\Web2print\Exception\DriverException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
-class DriverRunner
+final class DriverRunner implements DriverRunnerInterface
 {
     public const DEFAULT_TIMEOUT = 30;
 
@@ -18,7 +19,7 @@ class DriverRunner
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @throws DriverException
      */
     public function run(): Process
     {
@@ -36,10 +37,18 @@ class DriverRunner
                 $this->logger->info($buffer);
             }
         });
-        $timeout = ($this->driverOptions['timeout'] ?? null) ?? self::DEFAULT_TIMEOUT;
-        $this->waitUntilReady($this->process, (int) $timeout);
+
+        /** @var mixed $optTimeout get timeout from options */
+        $optTimeout = $this->driverOptions['timeout'] ?? null;
+        $timeout = \is_numeric($optTimeout) ? (int) $optTimeout : self::DEFAULT_TIMEOUT;
+        try {
+            $this->waitUntilReady($this->process, $timeout);
+        } catch (\Throwable $e) {
+            throw new DriverException('Unable to start Chromedriver', previous: $e);
+        }
 
         $this->logger->info(\sprintf('Chrome-driver started at %s', \date_create()->format(\DateTimeInterface::ATOM)));
+
         return $this->process;
     }
 
@@ -65,7 +74,7 @@ class DriverRunner
         while (true) {
             $status = $process->getStatus();
             if (Process::STATUS_TERMINATED === $status) {
-                throw new \RuntimeException(\sprintf('Could not start Webdriver. Exit code: %d (%s). Error output: %s', $process->getExitCode(), $process->getExitCodeText(), $process->getErrorOutput()));
+                throw new \RuntimeException(\sprintf('Could not start Webdriver. Exit code: %d (%s). Error output: %s', (string) $process->getExitCode(), (string) $process->getExitCodeText(), $process->getErrorOutput()));
             }
 
             if (Process::STATUS_STARTED !== $status) {
